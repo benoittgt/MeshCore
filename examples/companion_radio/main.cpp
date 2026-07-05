@@ -124,7 +124,7 @@ void setup() {
   #ifdef ST7789
     disp->setTextSize(2);
   #endif
-    disp->drawTextCentered(disp->width() / 2, 28, "Loading...");
+    disp->drawTextCentered(disp->width() / 2, 28, "MichelCore...");
     disp->endFrame();
   }
 #endif
