@@ -42,7 +42,11 @@ public:
 
   int render(DisplayDriver& display) override {
     display.setColor(DisplayDriver::LIGHT);
+#ifdef ST7789
+    display.drawNativeBitmap(0, 0, custom_splash_logo_rgb565, 240, 135);
+#else
     display.drawXbm(0, 0, custom_splash_logo, 128, 64);
+#endif
     return 1000;
   }
 

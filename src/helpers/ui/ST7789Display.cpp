@@ -151,6 +151,10 @@ void ST7789Display::drawRect(int x, int y, int w, int h) {
   display.drawRect(x*SCALE_X + X_OFFSET, y*SCALE_Y + Y_OFFSET, w*SCALE_X, h*SCALE_Y);
 }
 
+void ST7789Display::drawNativeBitmap(int x, int y, const uint16_t* data, int w, int h) {
+  display.drawRGB565Bitmap(x, y, data, w, h);
+}
+
 void ST7789Display::drawXbm(int x, int y, const uint8_t* bits, int w, int h) {
   // Calculate the base position in display coordinates
   uint16_t startX = x * SCALE_X + X_OFFSET;

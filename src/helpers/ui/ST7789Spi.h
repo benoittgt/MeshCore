@@ -287,6 +287,24 @@ class ST7789Spi : public OLEDDisplay {
   //sendCommand(DISPLAYOFF);
   }
   
+  void drawRGB565Bitmap(uint16_t x, uint16_t y, const uint16_t* data, uint16_t w, uint16_t h) {
+    set_CS(LOW);
+    _spi->beginTransaction(_spiSettings);
+    setAddrWindow(x, y, w, h);
+    uint16_t *rowbuf = (uint16_t *)rtos_malloc(w * 2);
+    for (uint16_t row = 0; row < h; row++) {
+      memcpy(rowbuf, data + row * w, w * 2);
+#ifdef ESP_PLATFORM
+      _spi->transferBytes((uint8_t *)rowbuf, NULL, w * 2);
+#else
+      _spi->transfer(rowbuf, NULL, w * 2);
+#endif
+    }
+    rtos_free(rowbuf);
+    _spi->endTransaction();
+    set_CS(HIGH);
+  }
+
   void drawBitmap(int16_t xMove, int16_t yMove, int16_t width, int16_t height, const uint8_t *xbm) {
     int16_t widthInXbm = (width + 7) / 8;
     uint8_t data = 0;
