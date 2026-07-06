@@ -303,6 +303,11 @@ class ST7789Spi : public OLEDDisplay {
     rtos_free(rowbuf);
     _spi->endTransaction();
     set_CS(HIGH);
+    uint16_t bufSize = displayWidth * _buffheight;
+    memset(buffer, 0xFF, bufSize);
+#ifdef OLEDDISPLAY_DOUBLE_BUFFER
+    memset(buffer_back, 0xFF, bufSize);
+#endif
   }
 
   void drawBitmap(int16_t xMove, int16_t yMove, int16_t width, int16_t height, const uint8_t *xbm) {
