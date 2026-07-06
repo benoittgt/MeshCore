@@ -62,9 +62,9 @@ def convert_image_color(image_path):
 
     cmd = [
         "magick", image_path,
-        "-resize", f"{NATIVE_WIDTH}x{NATIVE_HEIGHT}",
+        "-auto-orient",
+        "-resize", f"{NATIVE_WIDTH}x{NATIVE_HEIGHT}^",
         "-gravity", "center",
-        "-background", "black",
         "-extent", f"{NATIVE_WIDTH}x{NATIVE_HEIGHT}",
         "-depth", "8",
         f"rgb:{tmp}",
