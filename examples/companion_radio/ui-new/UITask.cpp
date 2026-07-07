@@ -491,7 +491,9 @@ public:
     if (path_len == 0xFF) {
       sprintf(p->origin, "(D) %s:", from_name);
     } else {
-      sprintf(p->origin, "(%d) %s:", (uint32_t) path_len, from_name);
+      uint8_t hops = path_len & 63;
+      uint8_t hash_sz = (path_len >> 6) + 1;
+      sprintf(p->origin, "(%dH %dB) %s:", hops, hash_sz, from_name);
     }
     StrHelper::strncpy(p->msg, msg, sizeof(p->msg));
   }
