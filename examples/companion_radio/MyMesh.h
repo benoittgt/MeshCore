@@ -101,6 +101,8 @@ public:
   void enterCLIRescue();
 
   int  getRecentlyHeard(AdvertPath dest[], int max_num);
+  int  getOfflineQueueLen() const { return offline_queue_len; }
+  int  getOfflineQueueMax() const { return OFFLINE_QUEUE_SIZE; }
 
 protected:
   float getAirtimeBudgetFactor() const override;

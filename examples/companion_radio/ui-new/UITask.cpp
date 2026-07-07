@@ -2,6 +2,9 @@
 #include <helpers/TxtDataHelpers.h>
 #include "../MyMesh.h"
 #include "target.h"
+#ifdef ARDUINO_ARCH_NRF52
+  #include "utility/debug.h"
+#endif
 #ifdef WIFI_SSID
   #include <WiFi.h>
 #endif
@@ -64,6 +67,7 @@ class HomeScreen : public UIScreen {
     RADIO,
     BLUETOOTH,
     ADVERT,
+    DEVICE,
 #if ENV_INCLUDE_GPS == 1
     GPS,
 #endif
@@ -263,6 +267,30 @@ public:
       display.setColor(DisplayDriver::GREEN);
       display.drawXbm((display.width() - 32) / 2, 18, advert_icon, 32, 32);
       display.drawTextCentered(display.width() / 2, 64 - 11, "advert: " PRESS_LABEL);
+    } else if (_page == HomePage::DEVICE) {
+      display.setColor(DisplayDriver::YELLOW);
+      display.setTextSize(1);
+      int y = 18;
+      sprintf(tmp, "Contacts: %d / %d", the_mesh.getNumContacts(), MAX_CONTACTS);
+      display.setCursor(0, y);
+      display.print(tmp);
+      y += 11;
+      sprintf(tmp, "Queue: %d / %d", the_mesh.getOfflineQueueLen(), the_mesh.getOfflineQueueMax());
+      display.setCursor(0, y);
+      display.print(tmp);
+      y += 11;
+#ifdef ARDUINO_ARCH_NRF52
+      int heapFree = dbgHeapFree();
+      int heapTotal = dbgHeapTotal();
+      int heapPct = heapTotal > 0 ? (heapFree * 100) / heapTotal : 0;
+      sprintf(tmp, "RAM free: %dK / %dK (%d%%)", heapFree / 1024, heapTotal / 1024, heapPct);
+      display.setCursor(0, y);
+      display.print(tmp);
+      y += 11;
+#endif
+      sprintf(tmp, "Batt: %dmV", _task->getBattMilliVolts());
+      display.setCursor(0, y);
+      display.print(tmp);
 #if ENV_INCLUDE_GPS == 1
     } else if (_page == HomePage::GPS) {
       LocationProvider* nmea = sensors.getLocationProvider();
